@@ -1,7 +1,7 @@
-[program:phones_keep]
-command=python3.9 phones.py
-stdout_logfile=./phones_keep.log
-stderr_logfile=./phones_keep.log
+[program:carrierslb_sync]
+command=python3.9 carrierslb_sync.py
+stdout_logfile=./carrierslb_sync.log
+stderr_logfile=./carrierslb_sync.log
 logfile_maxbytes = 100MB
 logfile_backups = 10
 loglevel = info

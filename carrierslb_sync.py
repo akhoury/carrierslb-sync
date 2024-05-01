@@ -10,10 +10,10 @@ configParser = configparser.RawConfigParser()
 configFilePath = r'./config.cfg'
 configParser.read(configFilePath)
 
-notes_id=configParser.get('phones', 'notes_id')
-keep_username=configParser.get('phones', 'keep_username')
-alfa_accounts=json.loads(configParser.get('phones', 'alfa_accounts'))
-alfa_labels=json.loads(configParser.get('phones', 'alfa_labels'))
+notes_id=configParser.get('carrierslb_sync', 'notes_id')
+keep_username=configParser.get('carrierslb_sync', 'keep_username')
+alfa_accounts=json.loads(configParser.get('carrierslb_sync', 'alfa_accounts'))
+alfa_labels=json.loads(configParser.get('carrierslb_sync', 'alfa_labels'))
 
 keep = gkeepapi.Keep()
 
@@ -25,11 +25,11 @@ keep = gkeepapi.Keep()
 # print(token)
 
 # You can only used the below if you have a token which you should have added to config
-keep_token=configParser.get('phones', 'keep_token')
+keep_token=configParser.get('carrierslb_sync', 'keep_token')
 
-TIMEOUT=int(configParser.get('phones', 'timeout') or 60000 * 5)
-REPEAT_MINUTES=int(configParser.get('phones', 'repeat_minutes') or 60)
-DANGER_PERCENT=float(configParser.get('phones', 'danger_percent') or 0.8)
+TIMEOUT=int(configParser.get('carrierslb_sync', 'timeout') or 60000 * 5)
+REPEAT_MINUTES=int(configParser.get('carrierslb_sync', 'repeat_minutes') or 60)
+DANGER_PERCENT=float(configParser.get('carrierslb_sync', 'danger_percent') or 0.8)
 
 def oclock ():
     n = datetime.datetime.now()
@@ -112,7 +112,8 @@ def syncInfo(arr=[]):
         else:
             note.color = gkeepapi.node.ColorValue.Green
 
-        print("syncing")
+        print("syncing text")
+        print(text)
         keep.sync()
         print("synced")
 
@@ -172,6 +173,7 @@ def getPhonesData():
 
         browser.close()
         return arr
+
 
 
 while(True):
