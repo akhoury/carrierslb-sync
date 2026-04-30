@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head><title>My Ogero - Dashboard</title></head>
+<body>
+<div class="MyOgeroMenuContainer">
+  <div class="MyOgeroMenu">
+    <a href="/myogero/index.php" class="BackgroundGradient">My Profile</a>
+    <a href="/myogero/login.logout.php">Logout</a>
+  </div>
+</div>
+
+<div class="MyOgeroDashboardContainer">
+  <div class="MyOgeroDashboard">
+    <div class="MyOgeroDashboardSection2">
+      <div class="MyOgeroDashboardSection2NumberChangeContainer">
+        <div class="MyOgeroDashboardSection2NumberChange">
+          <div>Account</div>
+          <select name="changnumber" id="changnumber" onchange="window.location='?&nbr='+$(this).val()+ '&dsl=' + $( '#changnumber option:selected ' ).attr('value2')">
+            <option value="09111111" value2="D100001" selected>
+              D100001 /   09 111111 </option>
+            <option value="09222222" value2="D100002">
+              D100002 /   09 222222 </option>
+            <option value="09333333" value2="D100003">
+              D100003 /   09 333333 </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="MyOgeroDashboardSection2Services">
+        <div>Telephone Number<span>09 111111</span></div>
+        <div>DSL Number<span>D100001</span></div>
+        <div>Current Bundle<span>up to 6Mbps (FUP)</span></div>
+      </div>
+
+      <div class="MyOgeroDashboardSection2Container">
+        <div class="MyOgeroDashboardSection2Bill">
+          <div class="BackgroundGradient">
+            <section>1,710,000<span>LL</span></section>
+          </div>
+          <b>Bills Until</b>March 2026
+        </div>
+        <div class="MyOgeroDashboardSection2Consumption">
+          <div><span class="chart" data-percent="25"></span></div>
+          <section>400 GB FUP<span>25%</span></section><b>Consumption</b>100 / 400 GB FUP                        <br><br><b>Until</b>30/04/2026 06:33                        <br><a href="/myogero/consumption.php">Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

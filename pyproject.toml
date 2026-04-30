@@ -1,0 +1,50 @@
+[project]
+name = "carriers-sync"
+version = "0.1.0"
+description = "Home Assistant App: sync mobile carrier usage data via MQTT discovery."
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+dependencies = [
+    "playwright>=1.42",
+    "playwright-stealth>=1.0",
+    "aiomqtt>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-mock>=3.12",
+    "freezegun>=1.4",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "types-PyYAML",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["carriers_sync/src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["carriers_sync/src"]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "ASYNC"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "carriers_sync/src"
+explicit_package_bases = true

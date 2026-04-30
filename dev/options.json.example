@@ -1,0 +1,16 @@
+{
+  "poll_interval_minutes": 60,
+  "danger_percent": 80,
+  "log_level": "debug",
+  "accounts": [
+    {
+      "provider": "alfa-lb",
+      "username": "03333333",
+      "password": "your-alfa-password",
+      "label": "John",
+      "secondary_labels": [
+        {"number": "03222222", "label": "Wife"}
+      ]
+    }
+  ]
+}

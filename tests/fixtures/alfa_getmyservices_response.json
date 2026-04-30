@@ -1,0 +1,38 @@
+[
+  {
+    "Name": "CLIP",
+    "Status": 0,
+    "ActiveBundle": null,
+    "Bundles": [],
+    "IsBundledPlan": false
+  },
+  {
+    "Name": "Mobile Internet",
+    "Status": 0,
+    "ActiveBundle": {
+      "Id": 962,
+      "Text": "7GB",
+      "TextEn": "7GB",
+      "TextAr": "7GB",
+      "Value": "Internet NonVPN - 7GB",
+      "Selected": true,
+      "PriceEn": "$9 extra MB: $0.01/MB",
+      "Pending": false,
+      "Status": 0
+    },
+    "Bundles": [
+      {"Id": 942, "Text": "1GB", "TextEn": "1GB", "Selected": false},
+      {"Id": 962, "Text": "7GB", "TextEn": "7GB", "Selected": true},
+      {"Id": 413, "Text": "25GB", "TextEn": "25GB", "Selected": false},
+      {"Id": 223, "Text": "PAYG", "TextEn": "PAYG", "Selected": false}
+    ],
+    "IsBundledPlan": false
+  },
+  {
+    "Name": "Conference Multiparty",
+    "Status": 0,
+    "ActiveBundle": null,
+    "Bundles": [],
+    "IsBundledPlan": false
+  }
+]

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Carriers Sync — dashboard mockup</title>
+<!-- Static visual mock of a Carriers Sync HA dashboard. Open in a browser
+     and screenshot the cards for docs / README. The look mirrors HA's
+     default dark theme: rounded cards on a dark canvas, system font, and
+     emoji squares as the usage bar (rendered identically by HA's
+     markdown card via the example dashboard YAML).  -->
+<style>
+  :root {
+    --canvas: #111418;
+    --card: #1f2227;
+    --card-hover: #2a2e34;
+    --text: #e1e3e6;
+    --text-dim: #8b8e91;
+    --accent: #03a9f4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px;
+    background: var(--canvas);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 1080px;
+    margin: 0 auto 16px;
+  }
+  .title {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+    flex: 1;
+  }
+  .refresh-all {
+    background: var(--card);
+    color: var(--text);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
+  }
+  .refresh-all:hover { background: var(--card-hover); }
+  .refresh-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-dim);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .card h3 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .bar {
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin: 10px 0 6px;
+    word-break: keep-all;
+  }
+  .bar strong {
+    margin-left: 8px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .synced {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+  ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text);
+  }
+  ul li {
+    margin: 2px 0;
+  }
+  .footer-note {
+    max-width: 1080px;
+    margin: 24px auto 0;
+    color: var(--text-dim);
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 class="title">Mobile data</h1>
+  <button class="refresh-all">
+    <svg class="refresh-icon" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+    Refresh all accounts
+  </button>
+</div>
+
+<div class="grid">
+
+  <!-- Alfa with twins (low usage, green) -->
+  <div class="card">
+    <h3>John — 6.33 / 50 GB</h3>
+    <div class="bar">🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜<strong>12.7%</strong></div>
+    <p class="synced">synced 5 minutes ago</p>
+    <ul>
+      <li>John (main): 4.20 GB</li>
+      <li>Home router: 0.00 GB</li>
+      <li>Office router: 2.13 GB</li>
+    </ul>
+  </div>
+
+  <!-- Alfa solo (no twins) -->
+  <div class="card">
+    <h3>Garage SIM — 0 / 7 GB</h3>
+    <div class="bar">⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜<strong>0.0%</strong></div>
+    <p class="synced">synced 5 minutes ago</p>
+  </div>
+
+  <!-- Touch -->
+  <div class="card">
+    <h3>Family Mobile — 6.45 / 32 GB</h3>
+    <div class="bar">🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜<strong>20.2%</strong></div>
+    <p class="synced">synced 7 minutes ago</p>
+    <ul>
+      <li>Sarah's mobile: 2.78 / 7 GB</li>
+      <li>Sarah's eSIM: 3.67 / 25 GB</li>
+    </ul>
+  </div>
+
+  <!-- Ogero -->
+  <div class="card">
+    <h3>Home Internet — 175 / 800 GB</h3>
+    <div class="bar">🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜<strong>21.9%</strong></div>
+    <p class="synced">synced 12 minutes ago</p>
+    <ul>
+      <li>Apartment DSL: 100 / 400 GB</li>
+      <li>Office DSL: 75 / 400 GB</li>
+    </ul>
+  </div>
+
+  <!-- Yellow example (Alfa with twins) -->
+  <div class="card">
+    <h3>Mike — 38.7 / 50 GB</h3>
+    <div class="bar">🟨🟨🟨🟨🟨🟨🟨🟨⬜⬜<strong>77.4%</strong></div>
+    <p class="synced">synced 5 minutes ago</p>
+    <ul>
+      <li>Mike (main): 0.05 GB</li>
+      <li>Mike's tablet: 38.60 GB</li>
+      <li>Spare line: 0.05 GB</li>
+    </ul>
+  </div>
+
+  <!-- Red example (Alfa with twins) -->
+  <div class="card">
+    <h3>Emma — 23.4 / 25 GB</h3>
+    <div class="bar">🟥🟥🟥🟥🟥🟥🟥🟥🟥⬜<strong>93.6%</strong></div>
+    <p class="synced">synced 5 minutes ago</p>
+    <ul>
+      <li>Emma (main): 18.20 GB</li>
+      <li>Emma's eSIM: 5.20 GB</li>
+    </ul>
+  </div>
+
+</div>
+
+<p class="footer-note">
+  Mock — not real data. Drop the example dashboard YAML
+  (<code>dev/dashboard-example.yaml</code>) into your HA Sections view to get
+  this layout from real Carriers Sync sensors.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+# Local dev compose stack for testing the App outside Home Assistant.
+# Boots a Mosquitto broker + the carriers-sync container with /data
+# mounted from ./dev/data so you can drop in a real options.json.
+#
+#   1. Copy dev/options.json.example to dev/data/options.json and edit.
+#   2. docker compose up --build
+#   3. Watch the carriers-sync logs.
+#   4. mosquitto_sub -h localhost -t 'carriers_sync/#' -v
+#      to confirm state messages are publishing.
+
+name: carriers_sync
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: carriers_sync_dev_mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./dev/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    restart: unless-stopped
+
+  carriers-sync:
+    build:
+      context: ./carriers_sync
+    container_name: carriers_sync_dev_app
+    depends_on:
+      - mosquitto
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_USERNAME: ""
+      MQTT_PASSWORD: ""
+    volumes:
+      - ./dev/data:/data
+    restart: unless-stopped
