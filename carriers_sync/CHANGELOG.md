@@ -218,6 +218,8 @@ After updating, expect to:
 - `last_synced` / `last_attempted` / `last_error` / `sync_ok` sensors
   for staleness visibility.
 
+[0.4.4]: https://github.com/akhoury/carriers-sync/compare/v0.4.3...v0.4.4
+[0.4.3]: https://github.com/akhoury/carriers-sync/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/akhoury/carriers-sync/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/akhoury/carriers-sync/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/akhoury/carriers-sync/compare/v0.3.0...v0.4.0

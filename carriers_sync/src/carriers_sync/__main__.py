@@ -115,8 +115,7 @@ def _apply_dev_filter(cfg: AppConfig, log: logging.Logger) -> AppConfig:
     kept = [
         a
         for a in cfg.accounts
-        if (not providers or a.provider in providers)
-        and (not usernames or a.username in usernames)
+        if (not providers or a.provider in providers) and (not usernames or a.username in usernames)
     ]
     skipped = len(cfg.accounts) - len(kept)
     log.warning(
