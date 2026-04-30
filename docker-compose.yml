@@ -7,6 +7,13 @@
 #   3. Watch the carriers-sync logs.
 #   4. mosquitto_sub -h localhost -t 'carriers_sync/#' -v
 #      to confirm state messages are publishing.
+#
+# Dev-only filtering (skip accounts you don't currently care about):
+#   CARRIERS_SYNC_DEV_PROVIDER=ogero-lb docker compose up
+#   CARRIERS_SYNC_DEV_USERNAME=03333333 docker compose up
+#   CARRIERS_SYNC_DEV_PROVIDER=alfa-lb,touch-lb docker compose up
+# Both env vars are AND-combined; comma-separated lists supported.
+# Unset = run all configured accounts (the production behaviour).
 
 name: carriers_sync
 
@@ -31,6 +38,10 @@ services:
       MQTT_PORT: "1883"
       MQTT_USERNAME: ""
       MQTT_PASSWORD: ""
+      # Dev-only account filters — pass through whatever is set on the host
+      # shell. Empty = no filter (all accounts run, same as production).
+      CARRIERS_SYNC_DEV_PROVIDER: "${CARRIERS_SYNC_DEV_PROVIDER:-}"
+      CARRIERS_SYNC_DEV_USERNAME: "${CARRIERS_SYNC_DEV_USERNAME:-}"
     volumes:
       - ./dev/data:/data
     restart: unless-stopped

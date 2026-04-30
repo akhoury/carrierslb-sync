@@ -174,11 +174,13 @@ class OgeroLbProvider:
             except Exception as e:
                 raise TransientFetchError(f"could not submit Ogero login form: {e}") from e
 
-            # Best-effort wait for navigation + xhr to settle.
-            with contextlib.suppress(Exception):
-                await page.wait_for_load_state("networkidle")
-
-            content = await page.content()
+            # Wait for the post-submit navigation to settle. The previous
+            # implementation suppressed errors here and then immediately
+            # tried page.content(), which raised
+            # "Unable to retrieve content because the page is navigating".
+            # Now we explicitly wait for the new document to load and retry
+            # content() a few times if it races with another navigation.
+            content = await self._read_settled_content(page)
             if not any(m in content for m in _LOGIN_OK_MARKERS):
                 # If captcha was on the page AND login didn't succeed, it's
                 # almost certainly a reCAPTCHA score below threshold.
@@ -198,7 +200,7 @@ class OgeroLbProvider:
             except Exception as e:
                 raise TransientFetchError(f"goto dashboard failed: {e}") from e
 
-            dashboard_html = await page.content()
+            dashboard_html = await self._read_settled_content(page)
             numbers = parse_number_list(dashboard_html)
             if not numbers:
                 raise UnknownFetchError("no numbers found in Ogero dashboard select")
@@ -211,7 +213,7 @@ class OgeroLbProvider:
                     await page.goto(url, wait_until="domcontentloaded")
                 except Exception as e:
                     raise TransientFetchError(f"goto {phone} failed: {e}") from e
-                html = await page.content()
+                html = await self._read_settled_content(page)
                 try:
                     consumed_gb, quota_gb = parse_consumption(html)
                 except UnknownFetchError as e:
@@ -257,6 +259,36 @@ class OgeroLbProvider:
             )
         finally:
             await context.close()
+
+    @staticmethod
+    async def _read_settled_content(page: Any) -> str:
+        """Return page.content() after waiting for any in-flight navigation.
+
+        Playwright's `page.content()` raises
+            "Unable to retrieve content because the page is navigating
+             and changing the content"
+        when called mid-redirect. We wait for the document to settle, then
+        retry a small number of times if another navigation kicks in
+        between the wait and the content read.
+        """
+        last_exc: Exception | None = None
+        for _attempt in range(5):
+            with contextlib.suppress(Exception):
+                # `load` is stricter than `domcontentloaded` (waits for
+                # subresources) but doesn't require networkidle, which can
+                # hang on long-poll connections (analytics beacons etc.).
+                await page.wait_for_load_state("load", timeout=15_000)
+            try:
+                content: str = await page.content()
+                return content
+            except Exception as e:  # noqa: BLE001
+                last_exc = e
+                # If the page is still navigating, give it a moment and
+                # try again on the next iteration.
+                await page.wait_for_timeout(1500)
+        raise TransientFetchError(
+            f"could not read page content after navigation settled: {last_exc}"
+        )
 
     @staticmethod
     async def _submit_form(page: Any) -> None:

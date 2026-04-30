@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.4] — 2026-04-30
+
+### Fixed
+
+- **Ogero login crash after JS form submit.** `page.content()` was
+  raising `Unable to retrieve content because the page is navigating
+  and changing the content` because we read the DOM mid-redirect. The
+  previous `wait_for_load_state("networkidle")` was wrapped in
+  `contextlib.suppress(Exception)` so its timeouts were silently
+  swallowed. Replaced with `_read_settled_content()` helper that uses
+  `wait_for_load_state("load")` (stricter than domcontentloaded, but
+  doesn't hang on long-poll connections like networkidle does) and
+  retries on the rare race where another navigation kicks in between
+  the wait and the content read. Applied to all 3 content-read sites
+  in the Ogero adapter (post-submit, dashboard, per-line page).
+- **Confirmed working end-to-end on a real Ogero account.** With
+  stealth + timing, reCAPTCHA v3 passes; no cookie injection needed.
+
+### Added
+
+- **Dev-only account filter** (`__main__.py`). Two env vars,
+  AND-combined, comma-separated lists supported:
+  - `CARRIERS_SYNC_DEV_PROVIDER` keep accounts whose provider matches
+  - `CARRIERS_SYNC_DEV_USERNAME` keep accounts whose username matches
+  Lets you iterate on one provider without waiting for a full
+  Alfa+Touch+Ogero cycle. Production behaviour unchanged (HA Supervisor
+  doesn't set these vars).
+- `docker-compose.yml` plumbs the same env vars from the host shell so
+  `CARRIERS_SYNC_DEV_PROVIDER=ogero-lb docker compose up` filters to
+  Ogero-only without editing config.
+
+## [0.4.3] — 2026-04-30
+
+### Other
+
+- Internal repo cleanup; no functional code change. (Real account
+  identifiers that had leaked into committed test fixtures and docs
+  during early development were replaced with placeholders.)
+
 ## [0.4.2] — 2026-04-30
 
 ### Changed

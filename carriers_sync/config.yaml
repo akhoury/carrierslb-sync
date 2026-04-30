@@ -1,5 +1,5 @@
 name: Carriers Sync
-version: 0.4.3
+version: 0.4.4
 slug: carriers_sync
 description: Sync mobile and fixed-line carrier data usage to Home Assistant via MQTT discovery. Currently supports Alfa, Touch, and Ogero (Lebanon).
 url: https://github.com/akhoury/carriers-sync

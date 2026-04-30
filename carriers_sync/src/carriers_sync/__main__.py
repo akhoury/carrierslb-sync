@@ -27,7 +27,7 @@ from pathlib import Path
 
 from playwright.async_api import async_playwright
 
-from carriers_sync.config import ConfigError, load_config
+from carriers_sync.config import AppConfig, ConfigError, load_config
 from carriers_sync.logging_setup import configure_logging
 from carriers_sync.mqtt_publisher import MqttConfig, MqttPublisher
 from carriers_sync.scheduler import Scheduler
@@ -90,6 +90,51 @@ def _mqtt_config() -> MqttConfig:
     )
 
 
+def _apply_dev_filter(cfg: AppConfig, log: logging.Logger) -> AppConfig:
+    """Optionally narrow `cfg.accounts` to a subset, for fast local iteration.
+
+    Recognised env vars (both optional, comma-separated, AND-combined):
+
+      CARRIERS_SYNC_DEV_PROVIDER   keep accounts whose `provider` matches
+                                   one of the listed ids (e.g. "ogero-lb"
+                                   or "alfa-lb,touch-lb")
+      CARRIERS_SYNC_DEV_USERNAME   keep accounts whose `username` matches
+                                   one of the listed values
+
+    Both unset → no filter, all configured accounts run. This intentionally
+    does nothing in production: HA Supervisor doesn't set these env vars.
+    """
+    providers_raw = os.environ.get("CARRIERS_SYNC_DEV_PROVIDER", "").strip()
+    usernames_raw = os.environ.get("CARRIERS_SYNC_DEV_USERNAME", "").strip()
+    if not providers_raw and not usernames_raw:
+        return cfg
+
+    providers = {p.strip() for p in providers_raw.split(",") if p.strip()}
+    usernames = {u.strip() for u in usernames_raw.split(",") if u.strip()}
+
+    kept = [
+        a
+        for a in cfg.accounts
+        if (not providers or a.provider in providers)
+        and (not usernames or a.username in usernames)
+    ]
+    skipped = len(cfg.accounts) - len(kept)
+    log.warning(
+        "DEV filter active: %d kept, %d skipped (provider=%r username=%r)",
+        len(kept),
+        skipped,
+        providers_raw or "any",
+        usernames_raw or "any",
+    )
+    # AppConfig is frozen — rebuild it.
+    return AppConfig(
+        poll_interval_minutes=cfg.poll_interval_minutes,
+        danger_percent=cfg.danger_percent,
+        log_level=cfg.log_level,
+        accounts=kept,
+    )
+
+
 async def _amain() -> int:
     try:
         cfg = load_config(OPTIONS_PATH)
@@ -100,6 +145,8 @@ async def _amain() -> int:
     secrets = [a.password for a in cfg.accounts if a.password]
     configure_logging(cfg.log_level, secrets=secrets)
     log = logging.getLogger("carriers_sync")
+
+    cfg = _apply_dev_filter(cfg, log)
 
     log.info("Carriers Sync starting (accounts=%d)", len(cfg.accounts))
     if not cfg.accounts:
